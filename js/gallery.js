@@ -67,10 +67,28 @@ const images = [
 ];
 
 const gallery = document.querySelector(".gallery");
+createImage(images);
 
-const createImages = images
-  .map(({ preview, original, description }) => {
-    return `<li class="gallery-item">
+gallery.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (event.target.tagName === "IMG") {
+    const imageLink = event.target.parentNode.href;
+    const description = event.target.alt;
+    const instance = basicLightbox.create(`
+    <div class="container modal-container">
+      <img class="gallery-modal" src="${imageLink}" alt="${description}">
+      <p class="gallery-modal-descr">${description}</p>
+    </div>
+`);
+
+    instance.show();
+  }
+});
+
+function createImage(array) {
+  const createImages = array
+    .map(({ preview, original, description }) => {
+      return `<li class="gallery-item">
     <a class="gallery-link" href="${original}">
       <img
         class="gallery-image"
@@ -81,11 +99,8 @@ const createImages = images
     </a>
   </li>
   `;
-  })
-  .join("");
+    })
+    .join("");
 
-gallery.insertAdjacentHTML("beforeend", createImages);
-
-gallery.addEventListener("click", (event) => {
-  event.preventDefault();
-});
+  gallery.insertAdjacentHTML("beforeend", createImages);
+}
